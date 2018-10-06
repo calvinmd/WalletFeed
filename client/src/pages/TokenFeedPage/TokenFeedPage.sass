@@ -1,3 +1,28 @@
 .TokenFeedPage
-  .Token
+
+  .TokenCard
+    display: flex
+    align-items: center
+    height: 70px
+
+    .TokenCardAmounts, .TokenCardAddresses
+      display: flex
+      align-items: center
+
+    .TokenCardImage
+      margin: 20px
+      width: 40px
+
+    .TokenCardValues
+      display: flex
+      flex-direction: column
   
+    .TokenCardAmounts
+      font-size: 1.2em
+      > span
+        margin-right: 10px
+
+    .TokenCardAddresses
+      margin-top: 5px
+      > *
+        margin-right: 5px

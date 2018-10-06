@@ -15,43 +15,45 @@ import Card from '@/components/Card'
 
 import './CoinFeedPage.sass'
 
+
+class CoinCard extends Component {
+  render() {
+    if (!this.props.coin) return null
+    const {
+      value,
+      to,
+      from,
+      image,
+      tokenSymbol,
+      tokenName,
+      tokenDecimal,
+    } = this.props.coin
+    return (
+      <Card className="CoinCard">
+        <img className="CoinCardImage" src={image} />
+        <div className="CoinCardValues">
+          <div className="CoinCardAmounts">
+            <span>{value / (Math.pow(10, tokenDecimal))}</span>
+            <span>{tokenSymbol}</span>
+          </div>
+          <div className="CoinCardName">
+            <span>{tokenName}</span>
+          </div>
+          <div className="CoinCardAddresses">
+            <span>{truncateAddress(from)}</span>
+            <MdArrowForward />
+            <span>{truncateAddress(to)}</span>
+          </div>
+        </div>
+      </Card>
+    )
+  }
+}
+
 @withRouter
 class CoinFeed extends Component {
   render() {
-    return (
-      <div>
-        {this.props.coins.map((c, i) => {
-          const {
-            value,
-            to,
-            from,
-            image,
-            tokenSymbol,
-            tokenName,
-            tokenDecimal,
-          } = c
-          return (
-            <Card className="CoinCard" key={i}>
-              <img className="CoinCardImage" src={image} />
-              <div className="CoinCardValues">
-                <div className="CoinCardAmounts">
-                  <span>{value / (Math.pow(10, tokenDecimal))}</span>
-                  <span>{tokenSymbol}</span>
-                </div>
-                <div className="CoinCardName">
-                  <span>{tokenName}</span>
-                </div>
-                <div className="CoinCartAddresses">
-                  <span>{truncateAddress(from)}</span>
-                  <MdArrowForward />
-                  <span>{truncateAddress(to)}</span>
-                </div>
-              </div>
-            </Card>
-          )
-        })}
-      </div>
-    )
+    return this.props.coins.map((coin, i) => <CoinCard coin={coin} key={i} />)
   }
 }
 
