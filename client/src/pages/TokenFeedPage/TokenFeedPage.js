@@ -12,8 +12,8 @@ class TokenFeed extends Component {
   render() {
     return (
       <div>
-        {this.props.tokens.map(t => (
-          <Card className="Token">
+        {this.props.tokens.map((t, i) => (
+          <Card className="Token" key={i}>
             <div>token!!</div>
           </Card>
         ))}
