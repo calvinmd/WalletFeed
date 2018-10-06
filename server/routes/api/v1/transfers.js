@@ -4,27 +4,24 @@ const axios = require('axios');
 const url = require('url');
 const _ = require('lodash');
 
-const ETHERSCAN_API = 'http://api.etherscan.io/api?module=account&action=tokentx';
-const SORT_ORDER = 'desc';
-const API_KEY = '5V1DUNJRCKDD6WDZKEAQZDI2SZ5Z6IAQFJ';
+const { getTransferUrl } = require('@/utils/etherscan');
 
 module.exports = () => {
   router.get('/', async (req, res) => {
     const url_parts = url.parse(req.url, true);
     const query = url_parts.query;
 
-    console.log('zzz query: ', query);
     let transfers = {};
     try {
       const address = query.address;
 
       if (!address) return res.status(500).json({ error: 'address param is required.' });
 
-      const TRANSFER_API_URL = `${ETHERSCAN_API}&sort=${SORT_ORDER}&apikey=${API_KEY}&address=${address}`;
+      const etherscanUrl = getTransferUrl({ address });
+      console.log('zzz etherscanUrl: ', etherscanUrl);
 
-      const { data } = await axios.get(TRANSFER_API_URL);
+      const { data } = await axios.get(etherscanUrl);
 
-      console.log('zzz data: ', data);
       if (!data) return res.status(500).json({ error: 'no data.' });
       const status = _.get(data, 'status');
       const result = _.get(data, 'result', 'api returns error.');
