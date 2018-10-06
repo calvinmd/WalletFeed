@@ -7,9 +7,15 @@ import './Card.sass';
 
 
 class Card extends Component {
+  static defaultProps = {
+    wide: true,
+  }
   render() {
     return (
-      <div className={cx({ Card: true }, (this.props.className || ''))}>
+      <div className={cx({
+        Card: true,
+        wide: this.props.wide,
+      }, (this.props.className || ''))}>
         {this.props.children}
       </div>
     );

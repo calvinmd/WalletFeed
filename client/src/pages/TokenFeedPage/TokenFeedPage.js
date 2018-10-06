@@ -17,7 +17,12 @@ class TokenFeed extends Component {
       <div>
         {this.props.tokens.map((t, i) => (
           <Card className="Token" key={i}>
-            <div>token!!</div>
+            <div>
+              token!!
+              <pre>
+                {JSON.stringify(t)}
+              </pre>
+            </div>
           </Card>
         ))}
       </div>

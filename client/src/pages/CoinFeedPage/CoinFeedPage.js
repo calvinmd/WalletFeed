@@ -15,9 +15,14 @@ class CoinFeed extends Component {
   render() {
     return (
       <div>
-        {this.props.coins.map((t, i) => (
+        {this.props.coins.map((c, i) => (
           <Card className="Coin" key={i}>
-            <div>coin!!</div>
+            <div>
+              coin!!
+              <pre>
+                {JSON.stringify(c)}
+              </pre>
+            </div>
           </Card>
         ))}
       </div>
