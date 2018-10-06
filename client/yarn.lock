@@ -4712,6 +4712,10 @@ react-dom@^16.3.1:
     object-assign "^4.1.1"
     prop-types "^15.6.0"
 
+react-icons@^3.1.0:
+  version "3.1.0"
+  resolved "https://registry.yarnpkg.com/react-icons/-/react-icons-3.1.0.tgz#004bc8d8b64a5480cdebd86ccb72ba5930b0e434"
+
 react-router-dom@^4.2.2:
   version "4.3.1"
   resolved "https://registry.yarnpkg.com/react-router-dom/-/react-router-dom-4.3.1.tgz#4c2619fc24c4fa87c9fd18f4fb4a43fe63fbd5c6"
