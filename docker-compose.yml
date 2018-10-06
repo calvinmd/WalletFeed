@@ -1,0 +1,45 @@
+version: '2'
+
+services:
+
+  postgres:
+    image: postgres
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_PASSWORD=password
+    volumes:
+      - ./tmp/pgdata:/var/lib/postgresql/data
+
+  client:
+    build: ./client
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./client:/app
+
+  server:
+    build: ./server
+    command: yarn dev
+    ports:
+      - "8000:8000"
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PORT=5432
+      - POSTGRES_HOST=postgres
+      - POSTGRES_URL=postgresql://postgres:password@postgres:5432/postgres
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DATABASE=postgres
+      - OPENRECORD_POSTGRES_HOST=postgres
+      - OPENRECORD_POSTGRES_USER=postgres
+      - OPENRECORD_POSTGRES_PASSWORD=password
+      - OPENRECORD_POSTGRES_DATABASE=postgres
+    depends_on:
+      - postgres
+    volumes:
+      - ./server:/app
+
+  # redis:
+  #   image: redis
+  #   ports:
+  #       - 6379:6379

@@ -1,0 +1,23 @@
+.SideMenu
+  position: fixed
+  width: 250px
+  background-color: blue
+  left: 0
+  top: 50px
+  bottom: 0
+  transition: all 0.3s ease-in-out
+  transform: translateX(-250px)
+
+  &.show
+    transform: none
+
+  .SideMenuOption
+    width: calc(100% - 50px)
+    cursor: pointer
+    height: 50px
+    display: flex
+    padding: 0 25px
+    align-items: center
+
+    &:hover
+      background-color: yellow
