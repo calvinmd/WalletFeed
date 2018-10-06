@@ -12,6 +12,22 @@ $wf-blue: rgb(40,156,244)
     width: 70%
     border: 1px solid $wf-blue
     border-radius: 5px
+    display: flex
+    align-items: center
+    justify-content: center
+
+    .MenuTopBarButton
+      height: 35px
+      flex-grow: 1
+      color: $wf-blue
+      border-radius: 5px
+      display: flex
+      align-items: center
+      justify-content: center
+      &.active
+        background-color: $wf-blue
+        color: white
+
 
   .back, .profile
     color: $wf-blue
