@@ -1,19 +1,31 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types';
 
-import { Link, withRouter } from 'react-router-dom'
+import { Link, withRouter, Route } from 'react-router-dom'
 
 import './TokenFeedPage.sass'
+
+
+class TokenFeed extends Component {
+  render() {
+    return (
+      <div>tokens {this.props.type}</div>
+    )
+  }
+}
+
 
 class TokenFeedPage extends Component {
   render() {
     const { history } = this.props;
     
-    document.title = 'WalletWatcher - Tokens'
+    document.title = 'WalletFeed - Coins'
     
     return (
       <div className="TokenFeedPage">
-        <h1 className="title">My Coin Feed</h1>
+          <Route path={"/tokens/all"} component={() => <TokenFeed type={'all'} />} />
+          <Route path={"/tokens/watchlist"} component={() => <TokenFeed type={'watchlist'} />} />
+          <Route path={"/tokens/me"} component={() => <TokenFeed type={'me'} />} />
       </div>
     )
   }

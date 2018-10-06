@@ -1,11 +1,18 @@
-import { createStore, applyMiddleware } from 'redux';
-import rootReducer from '@/constructors/redux/reducers/index.js';
+import { createStore, applyMiddleware, compose } from 'redux';
 import thunk from 'redux-thunk';
+import { connectRouter, routerMiddleware } from 'connected-react-router'
+import rootReducer from '@/constructors/redux/reducers';
+import history from '@/constructors/history'
 
 export default function createReduxStore() {
   return createStore(
-    rootReducer,
+    connectRouter(history)(rootReducer),
     window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__(),
-    applyMiddleware(thunk)
+    compose(
+      applyMiddleware(
+        routerMiddleware(history),
+        thunk
+      )
+    )
   );
 }
