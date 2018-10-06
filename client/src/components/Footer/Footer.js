@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import * as log from 'loglevel'
+import cx from 'classnames'
 import { withRouter } from 'react-router'
 import { FaCoins, FaPuzzlePiece, FaGamepad } from 'react-icons/fa'
 import { MdSwapHoriz, MdSettings, MdMoreHoriz } from 'react-icons/md'
@@ -11,7 +12,13 @@ import './Footer.sass';
 class FooterMenuButton extends Component {
   render() {
     return (
-      <div className='FooterMenuButton' onClick={this.props.onClick || (() => {})}>
+      <div
+        className={cx({
+          FooterMenuButton: true,
+          active: this.props.active,
+        })}
+        onClick={this.props.onClick || (() => {})}
+      >
         {this.props.children}
       </div>
     );
@@ -24,20 +31,17 @@ class Footer extends Component {
     const { history, match } = this.props
     return (
       <footer className="Footer">
-        <FooterMenuButton onClick={() => history.push('/coins/watchlist')}>
+        <FooterMenuButton active={history.location.pathname.startsWith('/coins')} onClick={() => history.push('/coins/watchlist')}>
           <FaCoins />
         </FooterMenuButton>
-        <FooterMenuButton onClick={() => history.push('/tokens/watchlist')}>
+        <FooterMenuButton active={history.location.pathname.startsWith('/tokens')} onClick={() => history.push('/tokens/watchlist')}>
           <FaGamepad />
         </FooterMenuButton>
-        <FooterMenuButton onClick={() => history.push('/marketplace')}>
+        <FooterMenuButton active={history.location.pathname.startsWith('/marketplace')} onClick={() => history.push('/marketplace')}>
           <MdSwapHoriz />
         </FooterMenuButton>
-        <FooterMenuButton onClick={() => history.push('/settings')}>
+        <FooterMenuButton active={history.location.pathname.startsWith('/settings')} onClick={() => history.push('/settings')}>
           <MdSettings />
-        </FooterMenuButton>
-        <FooterMenuButton onClick={() => history.push('/settings/more')}>
-          <MdMoreHoriz />
         </FooterMenuButton>
       </footer>
     );

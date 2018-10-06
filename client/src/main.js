@@ -28,6 +28,8 @@ import history from '@/constructors/history'
 import CoinFeedPage from '@/pages/CoinFeedPage'
 import TokenFeedPage from '@/pages/TokenFeedPage'
 import MarketplacePage from '@/pages/MarketplacePage'
+import SettingsPage from '@/pages/SettingsPage'
+import ProfilePage from '@/pages/ProfilePage'
 
 import Layout from '@/components/Layout'
 
@@ -65,6 +67,8 @@ class App extends React.Component {
             <Route path="/coins" component={CoinFeedPage} />
             <Route path="/tokens" component={TokenFeedPage} />
             <Route path="/marketplace" component={MarketplacePage} />
+            <Route path="/settings" component={SettingsPage} />
+            <Route path="/profile" component={ProfilePage} />
           </Layout>
         </Router>
       </Provider>

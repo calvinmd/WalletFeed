@@ -28,28 +28,28 @@ class MenuTopBarButton extends Component {
 
 
 @withRouter
-@connect(
-  state => ({
-    router: state.router,
-  })
-)
 class MenuTopBar extends Component {
   render() {
-    const { router: { location: { pathname } }, dispatch, history } = this.props;
+    const { dispatch, history } = this.props;
+    const { location } = history
+    const { pathname } = location
+    if (!(pathname.startsWith('/coins') || pathname.startsWith('/tokens'))) return (
+      <div className='MenuTopBar'>WalletFeed</div>
+    );
     return (
       <div className='MenuTopBar'>
         <Route path="/coins" render={props => (
           <>
-            <MenuTopBarButton active={history.location.pathname === '/coins/all'} onClick={() => history.push('/coins/all')}>All</MenuTopBarButton>
-            <MenuTopBarButton active={history.location.pathname === '/coins/watchlist'} onClick={() => history.push('/coins/watchlist')}>Watchlist</MenuTopBarButton>
-            <MenuTopBarButton active={history.location.pathname === '/coins/me'} onClick={() => history.push('/coins/me')}>Me</MenuTopBarButton>
+            <MenuTopBarButton active={pathname === '/coins/all'} onClick={() => history.push('/coins/all')}>All</MenuTopBarButton>
+            <MenuTopBarButton active={pathname === '/coins/watchlist'} onClick={() => history.push('/coins/watchlist')}>Watchlist</MenuTopBarButton>
+            <MenuTopBarButton active={pathname === '/coins/me'} onClick={() => history.push('/coins/me')}>Me</MenuTopBarButton>
           </>
         )} />
         <Route path="/tokens" render={props => (
           <>
-            <MenuTopBarButton active={history.location.pathname === '/tokens/all'} onClick={() => history.push('/tokens/all')}>All</MenuTopBarButton>
-            <MenuTopBarButton active={history.location.pathname === '/tokens/watchlist'} onClick={() => history.push('/tokens/watchlist')}>Watchlist</MenuTopBarButton>
-            <MenuTopBarButton active={history.location.pathname === '/tokens/me'} onClick={() => history.push('/tokens/me')}>Me</MenuTopBarButton>
+            <MenuTopBarButton active={pathname === '/tokens/all'} onClick={() => history.push('/tokens/all')}>All</MenuTopBarButton>
+            <MenuTopBarButton active={pathname === '/tokens/watchlist'} onClick={() => history.push('/tokens/watchlist')}>Watchlist</MenuTopBarButton>
+            <MenuTopBarButton active={pathname === '/tokens/me'} onClick={() => history.push('/tokens/me')}>Me</MenuTopBarButton>
           </>
         )} />
       </div>
@@ -57,14 +57,14 @@ class MenuTopBar extends Component {
   }
 }
 
-
+@withRouter
 class Header extends Component {
   render() {
     return (
       <header className="Header">
-        <MdChevronLeft className="back" />
+        <MdChevronLeft className="icon-left" onClick={() => this.props.history.goBack()}/>
         <MenuTopBar />
-        <FaUser className="profile" />
+        <FaUser className="icon-right" onClick={() => this.props.history.push('/profile')} />
       </header>
     );
   }
