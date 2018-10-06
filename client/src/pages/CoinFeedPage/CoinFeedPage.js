@@ -2,6 +2,8 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux'
 import { Link, withRouter, Route, Switch } from 'react-router-dom'
+import axios from '@/constructors/axios'
+import Card from '@/components/Card'
 
 import './CoinFeedPage.sass'
 
@@ -9,31 +11,54 @@ import './CoinFeedPage.sass'
 class CoinFeed extends Component {
   render() {
     return (
-      <div>coins {this.props.type}</div>
+      <div>
+        {this.props.coins.map(t => (
+          <Card className="Coin">
+            <div>coin!!</div>
+          </Card>
+        ))}
+      </div>
     )
   }
 }
 
 @connect(
   state => ({
-    router: state.router,
+
   })
 )   
 @withRouter
 class CoinFeedPage extends Component {
+  state = {
+    tokens: [{}, {}, {}],
+    coins: [{}, {}, {}],
+  }
+
+  async componentDidMount() {
+    try {
+      const { coins, tokens, error } = await axios.get('/api/v1/transfers')
+      if (error) {
+        log.error(error)
+        return
+      }
+      this.setState(coins, tokens, error)
+    } catch (e) {
+      log.error(e)
+    }
+  }
+
   render() {
-    const { router: { location: { pathname } }, dispatch, match } = this.props;
-    console.log('pathname', pathname, match.url)
+    const { dispatch, match } = this.props;
     document.title = 'WalletFeed - Coins'
     
     return (
       <div className="CoinFeedPage">
-          <Route path={"/coins/all"} component={() => <CoinFeed type={'all'} />} />
-          <Route path={"/coins/watchlist"} component={() => <CoinFeed type={'watchlist'} />} />
-          <Route path={"/coins/me"} component={() => <CoinFeed type={'me'} />} />
+          <Route path={"/coins/all"} component={() => <CoinFeed type={'all'} coins={this.state.coins} />} />
+          <Route path={"/coins/watchlist"} component={() => <CoinFeed type={'watchlist'} coins={this.state.coins} />} />
+          <Route path={"/coins/me"} component={() => <CoinFeed type={'me'} coins={this.state.coins} />} />
       </div>
     )
   }
 }
 
-export default withRouter(CoinFeedPage);
+export default CoinFeedPage;

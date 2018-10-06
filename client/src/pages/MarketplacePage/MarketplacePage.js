@@ -8,18 +8,19 @@ import './MarketplacePage.sass'
 
 @connect(
   state => ({
-    router: state.router,
+
   })
 )   
 @withRouter
 class MarketplacePage extends Component {
   render() {
-    const { router: { location: { pathname } }, dispatch, match } = this.props;
+    const { dispatch, match } = this.props;
     document.title = 'WalletFeed - Marketplace'
     
     return (
       <div className="MarketplacePage">
         MarketplacePage
+        ... coming soon ...
       </div>
     )
   }
