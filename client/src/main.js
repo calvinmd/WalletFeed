@@ -24,9 +24,8 @@ import createReduxStore from '@/constructors/redux/store'
 import loglevel from '@/constructors/loglevel'
 import history from '@/constructors/history'
 
-import SignupPage from '@/pages/SignupPage'
-import LoginPage from '@/pages/LoginPage'
-import HomePage from '@/pages/HomePage'
+import CoinFeedPage from '@/pages/CoinFeedPage'
+import TokenFeedPage from '@/pages/TokenFeedPage'
 
 import Layout from '@/components/Layout'
 
@@ -53,9 +52,8 @@ function App() {
     <Provider store={store}>
       <Router history={history}>
         <Layout>
-          <Route exact path="/login" component={LoginPage} />
-          <Route exact path="/signup" component={SignupPage} />
-          <Route exact path="/" component={HomePage} />
+          <Route exact path="/coins" component={CoinFeedPage} />
+          <Route path="/tokens" component={TokenFeedPage} />
         </Layout>
       </Router>
     </Provider>
