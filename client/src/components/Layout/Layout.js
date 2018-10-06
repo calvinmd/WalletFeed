@@ -7,6 +7,8 @@ import { withRouter } from 'react-router-dom'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
 
+import './Layout.sass'
+
 @connect(
   state => ({
     layout: state.layout,
@@ -18,7 +20,9 @@ class Layout extends Component {
     return (
       <div className="Layout">
         <Header />
-        {this.props.children}
+        <div className="Main">
+          {this.props.children}
+        </div>
         <Footer />
       </div>
     )
