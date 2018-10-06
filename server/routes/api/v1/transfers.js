@@ -4,7 +4,12 @@ const axios = require('axios');
 const url = require('url');
 const _ = require('lodash');
 
-const { getTransferUrl } = require('@/utils/etherscan');
+const {
+  getCoinData,
+  getTokenData,
+  getTransferUrl,
+  isCoinTx,
+} = require('@/utils/etherscan');
 
 module.exports = () => {
   router.get('/', async (req, res) => {
@@ -27,7 +32,17 @@ module.exports = () => {
       const result = _.get(data, 'result', 'api returns error.');
       if (status !== '1') return res.status(500).json({ error: result });
       // TODO: extract ERC20 and ERC721 tokens
-      transfers = result;
+      const coins = [];
+      const tokens = [];
+      result.map(tx => {
+        isCoinTx(tx) ? coins.push(getCoinData(tx)) : tokens.push(getTokenData(tx));
+      });
+      console.log('zzz coins: ', coins);
+      console.log('zzz tokenTxs: ', tokens);
+      transfers = {
+        coins,
+        tokens,
+      };
     } catch (e) {
       console.error(e);
       return res.status(500).json({ error: 'An error occurred while fetching coins.' });
