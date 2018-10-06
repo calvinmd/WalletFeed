@@ -1,10 +1,12 @@
+$card-padding: 5px
+$card-wide-margin: 2px
 .Card
-  padding: 5px
+  padding: $card-padding
   background-color: white
   border: 1px solid rgb(230, 230, 230)
   overflow: hidden
   font-size: 0.8em
 
   &.wide
-    width: 90%
-    margin: 20px auto
+    width: calc(100% - $card-wide-margin - $card-wide-margin - $card-padding - $card-padding)
+    margin: $card-wide-margin
