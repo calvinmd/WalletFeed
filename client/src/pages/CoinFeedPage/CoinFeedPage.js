@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux'
 import { Link, withRouter, Route, Switch } from 'react-router-dom'
+import * as log from 'loglevel'
 import axios from '@/constructors/axios'
 import Card from '@/components/Card'
 
