@@ -42,11 +42,12 @@ class TokenFeedPage extends Component {
     try {
       const address = '0x4baa512a919ba56cc4da7a1274e75e7183267bbe'
       const { coins, tokens, error } = await getTransfersForAddress(address)
+      console.log(coins, tokens, error);
       if (error) {
         log.error(error)
         return
       }
-      this.setState(coins, tokens, error)
+      this.setState({ coins, tokens, error })
     } catch (e) {
       log.error(e)
     }
