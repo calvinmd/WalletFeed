@@ -2,7 +2,10 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux'
 import { Link, withRouter, Route, Switch } from 'react-router-dom'
-import axios from '@/constructors/axios'
+import * as log from 'loglevel'
+import {
+  getTransfersForAddress,
+} from '@/constructors/redux/actions/transfers'
 import Card from '@/components/Card'
 
 import './CoinFeedPage.sass'
@@ -12,8 +15,8 @@ class CoinFeed extends Component {
   render() {
     return (
       <div>
-        {this.props.coins.map(t => (
-          <Card className="Coin">
+        {this.props.coins.map((t, i) => (
+          <Card className="Coin" key={i}>
             <div>coin!!</div>
           </Card>
         ))}
@@ -36,7 +39,9 @@ class CoinFeedPage extends Component {
 
   async componentDidMount() {
     try {
-      const { coins, tokens, error } = await axios.get('/api/v1/transfers')
+      const address = '0x4baa512a919ba56cc4da7a1274e75e7183267bbe'
+      const { coins, tokens, error } = await getTransfersForAddress(address)
+      console.log(coins, tokens, error, data);
       if (error) {
         log.error(error)
         return

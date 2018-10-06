@@ -4,6 +4,9 @@ import * as log from 'loglevel';
 import { Link, withRouter, Route } from 'react-router-dom'
 import axios from '@/constructors/axios'
 import Card from '@/components/Card'
+import {
+  getTransfersForAddress,
+} from '@/constructors/redux/actions/transfers'
 
 import './TokenFeedPage.sass'
 
@@ -12,8 +15,8 @@ class TokenFeed extends Component {
   render() {
     return (
       <div>
-        {this.props.tokens.map(t => (
-          <Card className="Token">
+        {this.props.tokens.map((t, i) => (
+          <Card className="Token" key={i}>
             <div>token!!</div>
           </Card>
         ))}
@@ -32,7 +35,8 @@ class TokenFeedPage extends Component {
 
   async componentDidMount() {
     try {
-      const { coins, tokens, error } = await axios.get('/api/v1/transfers')
+      const address = '0x4baa512a919ba56cc4da7a1274e75e7183267bbe'
+      const { coins, tokens, error } = await getTransfersForAddress(address)
       if (error) {
         log.error(error)
         return
