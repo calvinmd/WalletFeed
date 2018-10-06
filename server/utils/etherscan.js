@@ -28,12 +28,21 @@ const trimData = data => {
 const getCoinData = tx => {
   let coin = _.cloneDeep(tx);
   coin = trimData(coin);
+  contractAddress = coin.contractAddress;
+  if (contractAddress) {
+    coin.image = `https://raw.githubusercontent.com/TrustWallet/tokens/master/images/${contractAddress}.png`;
+  }
   return coin;
 };
 
 const getTokenData = tx => {
   let token = _.cloneDeep(tx);
   token = trimData(token);
+  token.tokenId = token.value;
+  delete token.value;
+  delete token.tokenDecimal;
+  // delete token.tokenName;
+  // delete token.tokenSymbol;
   return token;
 };
 

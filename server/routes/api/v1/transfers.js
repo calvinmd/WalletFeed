@@ -31,7 +31,7 @@ module.exports = () => {
       const status = _.get(data, 'status');
       const result = _.get(data, 'result', 'api returns error.');
       if (status !== '1') return res.status(500).json({ error: result });
-      // TODO: extract ERC20 and ERC721 tokens
+      /* Separate ERC20 and ERC721 tokens */
       const coins = [];
       const tokens = [];
       result.map(tx => {
