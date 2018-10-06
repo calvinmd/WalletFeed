@@ -35,13 +35,13 @@ log.info(`Bootstrapping Client (Web) app...`)
 loglevel()
 
 
-const PrivateRoute = ({ component: Component, ...rest }) => (
-  <Route {...rest} render={(props) => {
-    const authenticated = true;  /* TODO - auth */
-    return (authenticated) ? <Component {...props} {...rest} /> : <Redirect to='/login' />
-    }}
-  />
-);
+// const PrivateRoute = ({ component: Component, ...rest }) => (
+//   <Route {...rest} render={(props) => {
+//     const authenticated = true;  /* TODO - auth */
+//     return (authenticated) ? <Component {...props} {...rest} /> : <Redirect to='/login' />
+//     }}
+//   />
+// );
 
 
 function App() {
@@ -55,7 +55,7 @@ function App() {
         <Layout>
           <Route exact path="/login" component={LoginPage} />
           <Route exact path="/signup" component={SignupPage} />
-          <PrivateRoute exact path="/" component={HomePage} />
+          <Route exact path="/" component={HomePage} />
         </Layout>
       </Router>
     </Provider>
