@@ -4,6 +4,9 @@ import * as log from 'loglevel';
 import { Link, withRouter, Route } from 'react-router-dom'
 import axios from '@/constructors/axios'
 import Card from '@/components/Card'
+import {
+  getTransfersForAddress,
+} from '@/constructors/redux/actions/transfers'
 
 import './TokenFeedPage.sass'
 
@@ -32,7 +35,9 @@ class TokenFeedPage extends Component {
 
   async componentDidMount() {
     try {
-      const { coins, tokens, error } = await axios.get('/api/v1/transfers')
+      const address = '0x4baa512a919ba56cc4da7a1274e75e7183267bbe'
+      const res = await getTransfersForAddress(address)
+      console.log(res)
       if (error) {
         log.error(error)
         return
