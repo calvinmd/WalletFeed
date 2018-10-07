@@ -80,7 +80,7 @@ class TokenFeed extends Component {
     const { wallets, dispatch } = this.props
     const { watchlist, wallet } = wallets
     const ADDR_MAP = {
-      all: '',
+      all: '0xa9af3d88e5167ca6e9413cbb9b946ec95fe469ee',
       watchlist,
       me: wallet,
     }
