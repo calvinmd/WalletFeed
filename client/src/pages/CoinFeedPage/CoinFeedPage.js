@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types';
+import cx from 'classnames';
 import { connect } from 'react-redux'
 import { Link, withRouter, Route, Switch } from 'react-router-dom'
 import * as log from 'loglevel'
@@ -20,6 +21,10 @@ import './CoinFeedPage.sass'
 
 
 class CoinCard extends Component {
+  state = {
+
+  }
+
   render() {
     if (!this.props.coin) return null
     const {

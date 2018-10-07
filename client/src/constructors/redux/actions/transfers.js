@@ -6,7 +6,7 @@ import { getItem, setItem } from '@/constructors/localStorage'
 export const getTransfersForAddress = async (address, addressType) => {
   return async dispatch => {
     try {
-      const { data } = await axios.get(`/api/v1/transfers/?address=${address}`)
+      const { data } = await axios.get(`/api/v1/transfers?wallets=${address}`)
       const { coins, tokens } = data;
       log.info('Server returned address transfers: ', coins, tokens)
       return dispatch({

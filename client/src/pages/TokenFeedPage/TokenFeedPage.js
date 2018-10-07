@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types';
 import * as log from 'loglevel';
+import cx from 'classnames';
 import { Link, withRouter, Route } from 'react-router-dom'
 import { connect } from 'react-redux'
 import axios from '@/constructors/axios'
@@ -18,6 +19,10 @@ import './TokenFeedPage.sass'
 
 
 class TokenCard extends Component {
+  state = {
+
+  }
+
   render() {
     if (!this.props.token) return null
     const {
