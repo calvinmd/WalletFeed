@@ -11,7 +11,7 @@ const {
   isCoinTx,
 } = require('@/utils/etherscan');
 
-const getTxs = async(address) => {
+const getTxs = async(address, res) => {
   if (!address) return res.status(500).json({ error: 'address param is required.' });
 
   const etherscanUrl = getTransferUrl({ address });
@@ -34,7 +34,7 @@ module.exports = () => {
     try {
       const wallets = query.wallets;
       const walletArray = wallets.split(',');
-      const results = await Promise.all(walletArray.map(addr => getTxs(addr)));
+      const results = await Promise.all(walletArray.map(addr => getTxs(addr, res)));
       const result = _.flatten(results);
 
       /* Separate ERC20 and ERC721 tokens */
