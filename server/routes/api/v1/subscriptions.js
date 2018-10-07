@@ -12,6 +12,7 @@ const EMPTY_QUEUE = {
 // TODO: Move these to DB
 let NOTIFICATION_WALLETS = [];
 let NOTIFICATION_QUEUE = _.cloneDeep(EMPTY_QUEUE);
+const SUBSCRIPTIONS = [];
 
 const INTERVAL = 2 * 60 * 1000;
 let LAST_TIMESTAMP = Date.now() - INTERVAL;
@@ -40,12 +41,19 @@ const listener = async() => {
 
   LAST_TIMESTAMP = Date.now();
 
+  NOTIFICATION_QUEUE.coins.forEach(coin => {
+    // Send notification for each matching subscription
+  })
+
+  NOTIFICATION_QUEUE.tokens.forEach(coin => {
+    // Send notification for each matching subscription
+  })
+
   setTimeout(listener, INTERVAL);
 };
 
 listener();
 
-const SUBSCRIPTIONS = [];
 const sendNotification = async (subscription, dataToSend) => {
   const res = await webPush.sendNotification(subscription, dataToSend)
   .catch((err) => {
