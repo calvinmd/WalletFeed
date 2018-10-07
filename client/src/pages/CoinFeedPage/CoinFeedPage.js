@@ -32,7 +32,7 @@ class CoinCard extends Component {
       tokenDecimal,
     } = this.props.coin
     return (
-      <Card className={cx({ CoinCard: true, expanded })} onClick={() => this.setState{{ expanded: !expanded }}}>
+      <Card className={cx({ CoinCard: true, expanded })} onClick={() => this.setState({ expanded: !expanded })}>
         <img className="CoinCardImage" src={image} />
         <div className="CoinCardValues">
           <div className="CoinCardAmounts">
