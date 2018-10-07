@@ -37,6 +37,11 @@ const TOKENS = {
     tokenName: 'Ether Online',
     tokenSymbol: 'WAR',
     api: 'https://ether.online/api/v1/item/itemInfo/',
+  },
+  '0x4daa9dc438a77bd59e8a43c6d46cbfe84cd04255': {
+    contractAddress: '0x4daa9dc438a77bd59e8a43c6d46cbfe84cd04255',
+    tokenName: 'CryptoBotsBattle',
+    tokenSymbol: 'CBTB',
   }
 };
 

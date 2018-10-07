@@ -10,7 +10,11 @@ const getTransferUrl = ({
   sort = 'desc',
 }) => `${ETHERSCAN_API}?module=${module}&action=${action}&sort=${sort}&apikey=${API_KEY}&address=${address}`;
 
-const isCoinTx = tx => _.get(tx, 'tokenSymbol', false) && _.get(tx, 'contractAddress') !== '0xda9c03dfd4d137f926c3cf6953cb951832eb08b2'; // Ether Online is the exception
+const isCoinTx = tx => _.get(tx, 'tokenSymbol', false) &&
+  // Ether Online is the exception
+  _.get(tx, 'contractAddress') !== '0xda9c03dfd4d137f926c3cf6953cb951832eb08b2' &&
+  // CryptoBotsBattle is another exception
+  _.get(tx, 'contractAddress') !== '0x4daa9dc438a77bd59e8a43c6d46cbfe84cd04255';
 
 const trimData = data => {
   const newData = _.cloneDeep(data);
