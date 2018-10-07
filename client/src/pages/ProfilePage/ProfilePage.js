@@ -16,6 +16,7 @@ import './ProfilePage.sass'
 
 
 @withRouter
+@connect()
 class ProfilePage extends Component {
   dom = {
     walletInput: null,
@@ -33,8 +34,11 @@ class ProfilePage extends Component {
           <Input type="text" label="Wallet" ref={c => (this.dom.wallet = c)} defaultValue={getItem('wallet')} />
           <Input type="text" label="Watchlist" ref={c => (this.dom.watchlist = c)} defaultValue={getItem('watchlist')} />
           <Button onClick={() => {
-            setItem('wallet', this.dom.wallet.getValue())
-            setItem('watchlist', this.dom.watchlist.getValue())
+            const wallet = this.dom.wallet.getValue();
+            const watchlist = this.dom.watchlist.getValue();
+            setItem('wallet', wallet)
+            setItem('watchlist', watchlist)
+            dispatch({ type: 'UPDATE_PROFILE', payload: { wallet, watchlist } })
           }}>Update</Button>
         </Card>
       </div>

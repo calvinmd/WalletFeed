@@ -8,6 +8,7 @@ import axios from '@/constructors/axios'
 import Card from '@/components/Card'
 import { FaGamepad } from 'react-icons/fa'
 import { MdArrowForward } from 'react-icons/md'
+import RiseLoader from 'react-spinners/RiseLoader';
 import {
   getTransfersForAddress,
 } from '@/constructors/redux/actions/transfers'
@@ -20,7 +21,7 @@ import './TokenFeedPage.sass'
 
 class TokenCard extends Component {
   state = {
-
+    expanded: false,
   }
 
   render() {
@@ -90,10 +91,20 @@ class TokenFeed extends Component {
     const { type, dispatch } = this.props
     await dispatch(await getTransfersForAddress(this.getAddressForType(type), type))
   }
+
+  loader() {
+    return (
+      <div style={{height: '100vh', width: '100vw', display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
+        <RiseLoader color={'rgb(40,156,244)'} />
+      </div>
+    )
+  }
+
   render() {
     const { wallets, transfers, type } = this.props
     const { watchlist, wallet } = wallets
-    if (!transfers[type] || !transfers[type].tokens.length) <div>Nothing to see! Set your wallet...</div>
+    if (transfers.loading) return this.loader()
+    if (!transfers[type] || !transfers[type].tokens || !transfers[type].tokens.length) return <div>Nothing to see! Set your wallet...</div>
     return transfers[type].tokens.map((token, i) => <TokenCard token={token} key={i} />)
   }
 }
