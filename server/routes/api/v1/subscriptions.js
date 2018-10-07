@@ -15,6 +15,19 @@ const listener = () => {
   setTimeout(listener, 2 * 60 * 1000);
 };
 
+const webpush = require('web-push');
+const SUBSCRIPTIONS = [];
+const sendNotification = (subscription, dataToSend) => {
+  return webpush.sendNotification(subscription, dataToSend)
+  .catch((err) => {
+    if (err.statusCode === 410) {
+      return deleteSubscriptionFromDatabase(subscription._id)
+    } else {
+      console.log('Subscription is no longer valid: ', err)
+    }
+  })
+}
+
 module.exports = () => {
   router.get('/', async (req, res) => {
     try {
@@ -73,6 +86,14 @@ module.exports = () => {
       return res.status(500).json({ error: 'An error occurred while unsubscribing wallets.' });
     }
   });
+
+
+  router.post('/subscribe', async (req, res) => {
+    const { subscription } = req.body
+    if (!subscription) return res.status(500).json({ error: 'Subscription must be provided.' });
+    SUBSCRIPTIONS.push(subscription)
+    sendNotification(subscription, {hello: 'world'})
+  })
 
   return router;
 };

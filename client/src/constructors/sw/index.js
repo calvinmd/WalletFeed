@@ -24,7 +24,7 @@ const registerAndSubScribe = async () => {
 
   const pushSubscription = await registration.pushManager.subscribe(subscribeOptions)
   console.log('PushSubscription: ', JSON.stringify(pushSubscription));
-  const subscribeResponse = await axios.post('/transfers/subscribe', { subscription: pushSubscription})
+  const subscribeResponse = await axios.post('/subscriptions/subscribe', { subscription: pushSubscription})
   console.log('subscribeResponse: ', subscribeResponse);
 }
 
