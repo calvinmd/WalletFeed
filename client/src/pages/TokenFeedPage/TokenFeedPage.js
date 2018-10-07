@@ -30,8 +30,9 @@ class TokenCard extends Component {
       contractAddress,
     } = this.props.token
     console.log(JSON.stringify(this.props.token, null, 2))
+    const { expanded } = this.state
     return (
-      <Card className="TokenCard">
+      <Card className={cx({ TokenCard: true, expanded })} onClick={() => this.setState({ expanded: !expanded })}>
         {image ? <img className="TokenCardImage" src={image} /> : <FaGamepad style={{ fontSize: '40px', margin: '20px' }} />}
         <div className="TokenCardValues">
           <div className="TokenCardAmounts">
