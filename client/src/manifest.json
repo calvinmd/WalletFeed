@@ -1,0 +1,13 @@
+{
+  "name": "WalletFeed",
+  "short_name": "WalletFeed",
+  "icons": [{
+    "src": "icon.png",
+    "sizes": "192x192",
+    "type": "image/png"
+  }],
+  "start_url": "/"
+  {
+  "description": "WalletFeed app for keeping up to date with crypto wallet transactions.",
+  "gcm_sender_id": "142559804913"
+}
