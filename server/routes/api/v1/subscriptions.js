@@ -3,6 +3,8 @@ const _ = require('lodash');
 const logger = require('@/constructors/logger');
 const webPush = require('@/constructors/webPush');
 
+const { getTransfers } = require('@/utils/transfers');
+
 const EMPTY_QUEUE = {
   coins: [],
   tokens: [],
@@ -11,10 +13,34 @@ const EMPTY_QUEUE = {
 let NOTIFICATION_WALLETS = [];
 let NOTIFICATION_QUEUE = EMPTY_QUEUE;
 
-const listener = () => {
+const INTERVAL = 2 * 60 * 1000;
+let LAST_TIMESTAMP = Date.now() - INTERVAL;
+
+const listener = async() => {
   // TODO: do the magic
   console.log('zzz listner running!: ', NOTIFICATION_WALLETS);
-  setTimeout(listener, 2 * 60 * 1000);
+  if (!_.isEmpty(NOTIFICATION_WALLETS)) {
+    const { coins = [], tokens = [] } = await getTransfers(NOTIFICATION_WALLETS);
+
+    /* Add all transactions happened after INTERVAL ago to notification queue */
+    coins.map(coin => {
+      if (coin.timeStamp > LAST_TIMESTAMP) {
+        logger.info(`Adding coin transfer to notification queue: ${coin}`);
+        NOTIFICATION_QUEUE.coins.push(coin);
+      }
+    });
+
+    tokens.map(token => {
+      if (token.timeStamp > LAST_TIMESTAMP) {
+        logger.info(`Adding token transfer to notification queue: ${token}`);
+        NOTIFICATION_QUEUE.tokens.push(token);
+      }
+    });
+  }
+
+  LAST_TIMESTAMP = Date.now();
+
+  setTimeout(listener, INTERVAL);
 };
 
 listener();
