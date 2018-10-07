@@ -87,7 +87,6 @@ class CoinFeed extends Component {
   render() {
     const { wallets, transfers, type } = this.props
     const { watchlist, wallet } = wallets
-    console.log(transfers, type);
     if (!transfers[type] || !transfers[type].coins.length) <div>Nothing to see! Set your wallet...</div>
     return transfers[type].coins.map((coin, i) => <CoinCard coin={coin} key={i} />)
   }
