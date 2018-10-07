@@ -49,10 +49,8 @@ const SUBSCRIPTIONS = [];
 const sendNotification = async (subscription, dataToSend) => {
   const res = await webPush.sendNotification(subscription, dataToSend)
   .catch((err) => {
-    if (err.statusCode === 410) {
-      console.log('Subscription is no longer valid: ', err)
-    } else {
-      console.log('Subscription is no longer valid: ', err)
+    if (err.statusCode >= 400) {
+      console.log('Subscription is invalid: ', err)
     }
   })
 }
@@ -118,11 +116,11 @@ module.exports = () => {
 
 
   router.post('/subscribe', async (req, res) => {
-    const { subscription } = req.body
+    const { subscription, wallet } = req.body
     if (!subscription) return res.status(500).json({ error: 'Subscription must be provided.' });
-    SUBSCRIPTIONS.push(subscription)
-    console.log(subscription)
-    sendNotification(subscription, 'hello world')
+    if (!wallet) return res.status(500).json({ error: 'Wallet must be provided.' });
+    SUBSCRIPTIONS.push({ subscription, wallet })
+    res.status(200).send({ message: 'Subscribed to notifications.' })
   })
 
   return router;

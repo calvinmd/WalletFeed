@@ -2,7 +2,7 @@
 
 'use strict';
 
-console.log('im a serviceworker')
+console.log('Service Worker loaded.')
 
 self.addEventListener('push', function(e) {
   const options = {
