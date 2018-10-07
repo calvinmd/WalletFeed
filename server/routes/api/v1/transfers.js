@@ -1,5 +1,4 @@
 const router = require('express').Router();
-const mapSeries = require('async/mapSeries');
 const logger = require('@/constructors/logger');
 const axios = require('axios');
 const url = require('url');
