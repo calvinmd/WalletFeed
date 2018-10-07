@@ -25,10 +25,7 @@ const getTxs = async address => {
   return result;
 };
 
-const getTransfers = async wallets => {
-  const walletArray = wallets.split(',');
-  logger.info('WalletArray: ', walletArray);
-
+const getTransfers = async walletArray => {
   /* Merge all wallet transactions and sort by timestamp desc */
   const results = await Promise.all(walletArray.map(addr => getTxs(addr)));
   const result = _

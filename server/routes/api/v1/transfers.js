@@ -1,4 +1,5 @@
 const router = require('express').Router();
+const logger = require('@/constructors/logger');
 const url = require('url');
 const { getTransfers } = require('@/utils/transfers');
 
@@ -9,7 +10,10 @@ module.exports = () => {
 
     try {
       const wallets = query.wallets;
-      const transfers = await getTransfers(wallets);
+      const walletArray = wallets.split(',');
+      logger.info('WalletArray: ', walletArray);
+
+      const transfers = await getTransfers(walletArray);
       return res.status(200).json(transfers);
     } catch (e) {
       console.error(e);
