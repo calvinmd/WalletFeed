@@ -11,6 +11,20 @@ const {
   isCoinTx,
 } = require('@/utils/etherscan');
 
+const getTxs = async(address) => {
+  if (!address) return res.status(500).json({ error: 'address param is required.' });
+
+  const etherscanUrl = getTransferUrl({ address });
+  const { data } = await axios.get(etherscanUrl);
+  if (!data) return res.status(500).json({ error: 'no data.' });
+
+  const status = _.get(data, 'status');
+  const result = _.get(data, 'result', 'api returns error.');
+  if (status !== '1') return res.status(500).json({ error: result });
+
+  return result;
+};
+
 module.exports = () => {
   router.get('/', async (req, res) => {
     const url_parts = url.parse(req.url, true);
@@ -18,18 +32,11 @@ module.exports = () => {
 
     let transfers = {};
     try {
-      const address = query.address;
+      const wallets = query.wallets;
+      const walletArray = wallets.split(',');
+      const results = await Promise.all(walletArray.map(addr => getTxs(addr)));
+      const result = _.flatten(results);
 
-      if (!address) return res.status(500).json({ error: 'address param is required.' });
-
-      const etherscanUrl = getTransferUrl({ address });
-
-      const { data } = await axios.get(etherscanUrl);
-
-      if (!data) return res.status(500).json({ error: 'no data.' });
-      const status = _.get(data, 'status');
-      const result = _.get(data, 'result', 'api returns error.');
-      if (status !== '1') return res.status(500).json({ error: result });
       /* Separate ERC20 and ERC721 tokens */
       const coins = [];
       const tokenPromises = [];
