@@ -6,6 +6,7 @@ import { Link, withRouter, Route, Switch } from 'react-router-dom'
 import * as log from 'loglevel'
 import { FaCoins, FaGamepad } from 'react-icons/fa'
 import { MdArrowForward } from 'react-icons/md'
+import RiseLoader from 'react-spinners/RiseLoader';
 import {
   getTransfersForAddress,
 } from '@/constructors/redux/actions/transfers'
@@ -22,11 +23,12 @@ import './CoinFeedPage.sass'
 
 class CoinCard extends Component {
   state = {
-
+    expanded: false,
   }
 
   render() {
     if (!this.props.coin) return null
+    const { expanded } = this.state
     const {
       value,
       to,
@@ -89,10 +91,20 @@ class CoinFeed extends Component {
     const { type, dispatch } = this.props
     await dispatch(await getTransfersForAddress(this.getAddressForType(type), type))
   }
+
+  loader() {
+    return (
+      <div style={{height: '100vh', width: '100vw', display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
+        <RiseLoader color={'rgb(40,156,244)'} />
+      </div>
+    )
+  }
+
   render() {
     const { wallets, transfers, type } = this.props
     const { watchlist, wallet } = wallets
-    if (!transfers[type] || !transfers[type].coins.length) <div>Nothing to see! Set your wallet...</div>
+    if (transfers.loading) return this.loader()
+    if (!transfers[type] || !transfers[type].coins || !transfers[type].coins.length) return <div>Nothing to see! Set your wallet...</div>
     return transfers[type].coins.map((coin, i) => <CoinCard coin={coin} key={i} />)
   }
 }
