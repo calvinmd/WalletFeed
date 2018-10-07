@@ -35,13 +35,13 @@ class Footer extends Component {
           <FaCoins />
         </FooterMenuButton>
         <FooterMenuButton active={history.location.pathname.startsWith('/tokens')} onClick={() => history.push('/tokens/watchlist')}>
-          <FaGamepad />
+          <FaGamepad style={{ fontSize: '32px' }} />
         </FooterMenuButton>
         <FooterMenuButton active={history.location.pathname.startsWith('/marketplace')} onClick={() => history.push('/marketplace')}>
-          <MdSwapHoriz />
+          <MdSwapHoriz style={{ fontSize: '32px' }} />
         </FooterMenuButton>
         <FooterMenuButton active={history.location.pathname.startsWith('/settings')} onClick={() => history.push('/settings')}>
-          <MdSettings />
+          <MdSettings style={{ fontSize: '26px' }} />
         </FooterMenuButton>
       </footer>
     );
