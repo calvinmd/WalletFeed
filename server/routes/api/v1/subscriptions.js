@@ -12,8 +12,11 @@ let NOTIFICATION_QUEUE = EMPTY_QUEUE;
 
 const listener = () => {
   // TODO: do the magic
+  console.log('zzz listner running!: ', NOTIFICATION_WALLETS);
   setTimeout(listener, 2 * 60 * 1000);
 };
+
+listener();
 
 const webpush = require('web-push');
 const SUBSCRIPTIONS = [];
