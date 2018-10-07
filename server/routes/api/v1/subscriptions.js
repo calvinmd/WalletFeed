@@ -14,45 +14,9 @@ let NOTIFICATION_WALLETS = [];
 let NOTIFICATION_QUEUE = _.cloneDeep(EMPTY_QUEUE);
 const SUBSCRIPTIONS = [];
 
-const INTERVAL = 2 * 60 * 1000;
-let LAST_TIMESTAMP = Date.now() - INTERVAL;
-
-const listener = async() => {
-  // TODO: do the magic
-  console.log('zzz listner running!: ', NOTIFICATION_WALLETS);
-  if (!_.isEmpty(NOTIFICATION_WALLETS)) {
-    const { coins = [], tokens = [] } = await getTransfers(NOTIFICATION_WALLETS);
-
-    /* Add all transactions happened after INTERVAL ago to notification queue */
-    coins.map(coin => {
-      if (coin.timeStamp > LAST_TIMESTAMP) {
-        console.log('Adding coin transfer to notification queue: ', coin);
-        NOTIFICATION_QUEUE.coins.push(coin);
-      }
-    });
-
-    tokens.map(token => {
-      if (token.timeStamp > LAST_TIMESTAMP) {
-        console.log('Adding token transfer to notification queue: ', token);
-        NOTIFICATION_QUEUE.tokens.push(token);
-      }
-    });
-  }
-
-  LAST_TIMESTAMP = Date.now();
-
-  NOTIFICATION_QUEUE.coins.forEach(coin => {
-    // Send notification for each matching subscription
-  })
-
-  NOTIFICATION_QUEUE.tokens.forEach(coin => {
-    // Send notification for each matching subscription
-  })
-
-  setTimeout(listener, INTERVAL);
-};
-
-listener();
+const INTERVAL = 2 * 60 * 1000 / 4;
+// let LAST_TIMESTAMP = Date.now() - INTERVAL;
+let LAST_TIMESTAMP = 1536260376 - 10000;
 
 const sendNotification = async (subscription, dataToSend) => {
   const res = await webPush.sendNotification(subscription, dataToSend)
@@ -62,6 +26,85 @@ const sendNotification = async (subscription, dataToSend) => {
     }
   })
 }
+
+const sendPushNotificationForCoin = async coin => {
+  // Send notification for each matching subscription
+  SUBSCRIPTIONS.forEach(sub => {
+    const { wallet, subscription } = sub
+    const {
+      value,
+      to,
+      from,
+      image,
+      tokenSymbol,
+      tokenName,
+      tokenDecimal,
+    } = coin
+    const fromWallet = from.toLowerCase()
+    const toWallet = to.toLowerCase()
+    if (fromWallet === wallet) {
+      sendNotification(subscription, `Transferred ${value / (Math.pow(10, tokenDecimal))} ${tokenSymbol} to ${toWallet}`)
+    }
+    if (toWallet === wallet) {
+      sendNotification(subscription, `Received ${value / (Math.pow(10, tokenDecimal))} ${tokenSymbol} from ${fromWallet}`)
+    }
+  })
+}
+
+const sendPushNotificationForToken = async token => {
+  // Send notification for each matching subscription
+  SUBSCRIPTIONS.forEach(sub => {
+    const { wallet, subscription } = sub
+    const {
+      to,
+      from,
+      image,
+      tokenSymbol,
+      tokenName,
+      tokenId,
+      contractAddress,
+    } = token
+    const fromWallet = from.toLowerCase()
+    const toWallet = to.toLowerCase()
+    if (fromWallet === wallet) {
+      sendNotification(subscription, `Transferred ${value / (Math.pow(10, tokenDecimal))} ${tokenSymbol} to ${toWallet}`)
+    }
+    if (toWallet === wallet) {
+      sendNotification(subscription, `Received ${value / (Math.pow(10, tokenDecimal))} ${tokenSymbol} from ${fromWallet}`)
+    }
+  })
+}
+
+const listener = async() => {
+  // TODO: do the magic
+  console.log('zzz listner running!: ', SUBSCRIPTIONS);
+  console.log('SUBSCRIPTIONS:', SUBSCRIPTIONS)
+  if (!_.isEmpty(SUBSCRIPTIONS)) {
+    const { coins = [], tokens = [] } = await getTransfers(SUBSCRIPTIONS);
+
+    /* Add all transactions happened after INTERVAL ago to notification queue */
+    coins.map(coin => {
+      if (coin.timeStamp > LAST_TIMESTAMP) {
+        console.log('Adding coin transfer to notification queue: ', coin);
+        sendPushNotificationForCoin(coin);
+      }
+    });
+
+    tokens.map(token => {
+      if (token.timeStamp > LAST_TIMESTAMP) {
+        console.log('Adding token transfer to notification queue: ', token);
+        sendPushNotificationForToken(token);
+      }
+    });
+  }
+
+  // LAST_TIMESTAMP = Date.now();
+
+  setTimeout(listener, INTERVAL);
+};
+
+listener();
+
 
 module.exports = () => {
   router.get('/', async (req, res) => {
@@ -75,32 +118,32 @@ module.exports = () => {
     }
   });
 
-  router.post('/', async (req, res) => {
-    try {
-      const wallets = _.get(req, ['body', 'wallets']);
-      console.log('zzz subscribe wallets: ', wallets);
-      const walletArray = wallets.split(',');
-      logger.info('Subscribe to wallets: ', walletArray);
+  // router.post('/', async (req, res) => {
+  //   try {
+  //     const wallets = _.get(req, ['body', 'wallets']);
+  //     console.log('zzz subscribe wallets: ', wallets);
+  //     const walletArray = wallets.split(',');
+  //     logger.info('Subscribe to wallets: ', walletArray);
 
-      NOTIFICATION_WALLETS = _
-        .chain(NOTIFICATION_WALLETS)
-        .concat(walletArray)
-        .flatten()
-        .compact()
-        .uniq()
-        .value();
+  //     NOTIFICATION_WALLETS = _
+  //       .chain(NOTIFICATION_WALLETS)
+  //       .concat(walletArray)
+  //       .flatten()
+  //       .compact()
+  //       .uniq()
+  //       .value();
 
-      logger.info('Updated NOTIFICATION_WALLETS: ', NOTIFICATION_WALLETS);
+  //     logger.info('Updated NOTIFICATION_WALLETS: ', NOTIFICATION_WALLETS);
 
-      return res.status(200).json({
-        status: 1,
-        NOTIFICATION_WALLETS,
-      });
-    } catch (e) {
-      console.error(e);
-      return res.status(500).json({ error: 'An error occurred while subscribing to wallets.' });
-    }
-  });
+  //     return res.status(200).json({
+  //       status: 1,
+  //       NOTIFICATION_WALLETS,
+  //     });
+  //   } catch (e) {
+  //     console.error(e);
+  //     return res.status(500).json({ error: 'An error occurred while subscribing to wallets.' });
+  //   }
+  // });
 
   router.delete('/', async (req, res) => {
     try {
@@ -127,7 +170,7 @@ module.exports = () => {
     const { subscription, wallet } = req.body
     if (!subscription) return res.status(500).json({ error: 'Subscription must be provided.' });
     if (!wallet) return res.status(500).json({ error: 'Wallet must be provided.' });
-    SUBSCRIPTIONS.push({ subscription, wallet })
+    SUBSCRIPTIONS.push({ subscription, wallet: wallet.toLowerCase() })
     res.status(200).send({ message: 'Subscribed to notifications.' })
   })
 
