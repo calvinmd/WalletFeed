@@ -58,12 +58,11 @@ module.exports = () => {
         coins,
         tokens,
       };
+      return res.status(200).json(transfers);
     } catch (e) {
       console.error(e);
-      return result.status(500).json({ error: 'An error occurred while fetching coins.' });
+      return res.status(500).json({ error: 'An error occurred while fetching coins.' });
     }
-
-    return result.status(200).json(transfers);
   });
 
   return router;
