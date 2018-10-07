@@ -43,8 +43,9 @@ module.exports = () => {
       const results = await Promise.all(walletArray.map(addr => getTxs(addr)));
       const result = _
         .chain(results)
-        .compact()
         .flatten()
+        .compact()
+        .uniq()
         .sortBy('timeStamp')
         .reverse()
         .value();
