@@ -1,6 +1,7 @@
 const router = require('express').Router();
-const logger = require('@/constructors/logger');
 const _ = require('lodash');
+const logger = require('@/constructors/logger');
+const webPush = require('@/constructors/webPush');
 
 const { getTransfers } = require('@/utils/transfers');
 
@@ -44,13 +45,12 @@ const listener = async() => {
 
 listener();
 
-const webpush = require('web-push');
 const SUBSCRIPTIONS = [];
-const sendNotification = (subscription, dataToSend) => {
-  return webpush.sendNotification(subscription, dataToSend)
+const sendNotification = async (subscription, dataToSend) => {
+  const res = await webPush.sendNotification(subscription, dataToSend)
   .catch((err) => {
     if (err.statusCode === 410) {
-      return deleteSubscriptionFromDatabase(subscription._id)
+      console.log('Subscription is no longer valid: ', err)
     } else {
       console.log('Subscription is no longer valid: ', err)
     }
@@ -121,7 +121,8 @@ module.exports = () => {
     const { subscription } = req.body
     if (!subscription) return res.status(500).json({ error: 'Subscription must be provided.' });
     SUBSCRIPTIONS.push(subscription)
-    sendNotification(subscription, {hello: 'world'})
+    console.log(subscription)
+    sendNotification(subscription, 'hello world')
   })
 
   return router;

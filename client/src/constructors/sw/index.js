@@ -18,13 +18,14 @@ const registerAndSubScribe = async () => {
   const subscribeOptions = {
     userVisibleOnly: true,
     applicationServerKey: urlBase64ToUint8Array(
-      'BCm6pqpkNXkU1vw6RV0YKlrSvnBzCxbi3zCkJFqF0ktO-__GXSyXqSNH-IljT3FASFfpnrDHsu63ep0uBP6TyQg'
+      'BHEa09WcrSPva3MOvSIXlsGRqEVlfjOvVrT-S5_T__9U9uImayVsaa7xfT8d0Cx_5A3hBIV5lB7fiCsMWdbS5mE'
     ),
   };
 
   const pushSubscription = await registration.pushManager.subscribe(subscribeOptions)
+  // pushSubscription.unsubscribe()
   console.log('PushSubscription: ', JSON.stringify(pushSubscription));
-  const subscribeResponse = await axios.post('/subscriptions/subscribe', { subscription: pushSubscription})
+  const subscribeResponse = await axios.post('/api/v1/subscriptions/subscribe', { subscription: pushSubscription})
   console.log('subscribeResponse: ', subscribeResponse);
 }
 
