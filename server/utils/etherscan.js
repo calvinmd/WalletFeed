@@ -1,6 +1,7 @@
 const _ = require('lodash');
 const { API_KEY, ETHERSCAN_API } = require('@/constants/etherscan');
 const { TOKENS } = require('@/constants/tokens');
+const { getTokenImage } = require('@/utils/tokens');
 
 const getTransferUrl = ({
   address,
@@ -36,7 +37,7 @@ const getCoinData = tx => {
   return coin;
 };
 
-const getTokenData = tx => {
+const getTokenData = async tx => {
   let token = _.cloneDeep(tx);
   token = trimData(token);
   token.tokenId = token.value;
@@ -44,11 +45,18 @@ const getTokenData = tx => {
   delete token.tokenDecimal;
   delete token.tokenName;
   delete token.tokenSymbol;
+
   const contractAddress = token.contractAddress;
   const normalizedContractAddress = contractAddress ? contractAddress.toLowerCase() : '';
+
   if (contractAddress && TOKENS[normalizedContractAddress]) {
     token.tokenName = TOKENS[normalizedContractAddress].tokenName;
     token.tokenSymbol = TOKENS[normalizedContractAddress].tokenSymbol;
+  }
+
+  const image = await getTokenImage(normalizedContractAddress, token.tokenId);
+  if (image) {
+    token.image = image;
   }
   return token;
 };

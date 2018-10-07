@@ -1,4 +1,5 @@
 const router = require('express').Router();
+const mapSeries = require('async/mapSeries');
 const logger = require('@/constructors/logger');
 const axios = require('axios');
 const url = require('url');
@@ -23,7 +24,6 @@ module.exports = () => {
       if (!address) return res.status(500).json({ error: 'address param is required.' });
 
       const etherscanUrl = getTransferUrl({ address });
-      console.log('zzz etherscanUrl: ', etherscanUrl);
 
       const { data } = await axios.get(etherscanUrl);
 
@@ -33,12 +33,21 @@ module.exports = () => {
       if (status !== '1') return res.status(500).json({ error: result });
       /* Separate ERC20 and ERC721 tokens */
       const coins = [];
-      const tokens = [];
-      result.map(tx => {
-        isCoinTx(tx) ? coins.push(getCoinData(tx)) : tokens.push(getTokenData(tx));
+      const tokenPromises = [];
+      let tokens = [];
+
+      result.map(async tx => {
+        isCoinTx(tx) ? coins.push(getCoinData(tx)) : tokenPromises.push(getTokenData(tx));
       });
-      console.log('zzz coins: ', coins);
-      console.log('zzz tokenTxs: ', tokens);
+
+      await Promise.all(tokenPromises)
+        .then(values => {
+          tokens = _.cloneDeep(values);
+        })
+        .catch(e => {
+          console.error(e);
+        });
+
       transfers = {
         coins,
         tokens,
@@ -47,8 +56,7 @@ module.exports = () => {
       console.error(e);
       return res.status(500).json({ error: 'An error occurred while fetching coins.' });
     }
-    console.log('zzz transfers: ', transfers);
-    // TODO: return { coins: [], tokens: [] }
+
     return res.status(200).json(transfers);
   });
 
