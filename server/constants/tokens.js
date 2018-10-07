@@ -35,7 +35,7 @@ const TOKENS = {
   '0xda9c03dfd4d137f926c3cf6953cb951832eb08b2': {
     contractAddress: '0xda9c03dfd4d137f926c3cf6953cb951832eb08b2',
     tokenName: 'Ether Online',
-    tokeSymbol: 'EO',
+    tokenSymbol: 'WAR',
     api: 'https://ether.online/api/v1/item/itemInfo/',
   }
 };
