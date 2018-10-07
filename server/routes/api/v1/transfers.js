@@ -12,7 +12,6 @@ const {
 } = require('@/utils/etherscan');
 
 const getTxs = async(address) => {
-  // logger.info('getTxs address: ', address);
   if (!address) return null;
 
   const etherscanUrl = getTransferUrl({ address });
@@ -23,8 +22,7 @@ const getTxs = async(address) => {
   const status = _.get(data, 'status');
   const result = _.get(data, 'result', 'api returns error.');
 
-  logger.info('zzz Etherscan status: ', status);
-  // logger.info('zzz Etherscan result raw: ', result);
+  logger.info('Etherscan status: ', status);
   if (status !== '1') return null;
 
   return result;
@@ -40,12 +38,20 @@ module.exports = () => {
       const wallets = query.wallets;
       const walletArray = wallets.split(',');
       logger.info('WalletArray: ', walletArray);
+
+      /* Merge all wallet transactions and sort by timestamp desc */
       const results = await Promise.all(walletArray.map(addr => getTxs(addr)));
-      const result = _.flatten(_.compact(results));
+      const result = _
+        .chain(results)
+        .compact()
+        .flatten()
+        .sortBy('timeStamp')
+        .reverse()
+        .value();
 
       /* Separate ERC20 and ERC721 tokens */
+      const tokenPromises = []; // tokens require async call to retrieve metadata
       const coins = [];
-      const tokenPromises = [];
       let tokens = [];
 
       result.map(async tx => {
