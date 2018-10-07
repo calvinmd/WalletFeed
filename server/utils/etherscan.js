@@ -10,9 +10,13 @@ const getTransferUrl = ({
   sort = 'desc',
 }) => `${ETHERSCAN_API}?module=${module}&action=${action}&sort=${sort}&apikey=${API_KEY}&address=${address}`;
 
+// const isCoinTx = tx => parseInt(_.get(tx, 'tokenDecimal'), 10) !== 0;
 const isCoinTx = tx => _.get(tx, 'tokenSymbol', false) &&
   // Ether Online is the exception
   _.get(tx, 'contractAddress') !== '0xda9c03dfd4d137f926c3cf6953cb951832eb08b2' &&
+  _.get(tx, 'contractAddress') !== '0xa67aac23549f4c672256b59b43ab0bacfcfcd498' &&
+  // Mythereum XP
+  _.get(tx, 'contractAddress') !== '0x667ff8a73c73a5b868dfb0c751b5aa111c54542d' &&
   // CryptoBotsBattle is another exception
   _.get(tx, 'contractAddress') !== '0x4daa9dc438a77bd59e8a43c6d46cbfe84cd04255';
 
