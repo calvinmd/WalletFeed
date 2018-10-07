@@ -11,12 +11,11 @@ const EMPTY_QUEUE = {
 };
 // TODO: Move these to DB
 let NOTIFICATION_WALLETS = [];
-let NOTIFICATION_QUEUE = _.cloneDeep(EMPTY_QUEUE);
+
 const SUBSCRIPTIONS = [];
 
-const INTERVAL = 2 * 60 * 1000 / 4;
-// let LAST_TIMESTAMP = Date.now() - INTERVAL;
-let LAST_TIMESTAMP = 1536260376 - 10000;
+const INTERVAL = 2 * 60 * 1000;
+let LAST_TIMESTAMP = Date.now() - INTERVAL;
 
 const sendNotification = async (subscription, dataToSend) => {
   const res = await webPush.sendNotification(subscription, dataToSend)
@@ -67,10 +66,10 @@ const sendPushNotificationForToken = async token => {
     const fromWallet = from.toLowerCase()
     const toWallet = to.toLowerCase()
     if (fromWallet === wallet) {
-      sendNotification(subscription, `Transferred ${value / (Math.pow(10, tokenDecimal))} ${tokenSymbol} to ${toWallet}`)
+      sendNotification(subscription, `Transferred token ${tokenId} (${tokenName}) to ${toWallet}`)
     }
     if (toWallet === wallet) {
-      sendNotification(subscription, `Received ${value / (Math.pow(10, tokenDecimal))} ${tokenSymbol} from ${fromWallet}`)
+      sendNotification(subscription, `Received token ${tokenId} (${tokenName}) from ${fromWallet}`)
     }
   })
 }
@@ -78,10 +77,8 @@ const sendPushNotificationForToken = async token => {
 const listener = async() => {
   // TODO: do the magic
   console.log('zzz listner running!: ', SUBSCRIPTIONS);
-  console.log('SUBSCRIPTIONS:', SUBSCRIPTIONS)
   if (!_.isEmpty(SUBSCRIPTIONS)) {
-    const { coins = [], tokens = [] } = await getTransfers(SUBSCRIPTIONS);
-
+    const { coins = [], tokens = [] } = await getTransfers(SUBSCRIPTIONS.map(sub => sub.wallet));
     /* Add all transactions happened after INTERVAL ago to notification queue */
     coins.map(coin => {
       if (coin.timeStamp > LAST_TIMESTAMP) {
@@ -98,7 +95,7 @@ const listener = async() => {
     });
   }
 
-  // LAST_TIMESTAMP = Date.now();
+  LAST_TIMESTAMP = Date.now();
 
   setTimeout(listener, INTERVAL);
 };
@@ -118,32 +115,32 @@ module.exports = () => {
     }
   });
 
-  // router.post('/', async (req, res) => {
-  //   try {
-  //     const wallets = _.get(req, ['body', 'wallets']);
-  //     console.log('zzz subscribe wallets: ', wallets);
-  //     const walletArray = wallets.split(',');
-  //     logger.info('Subscribe to wallets: ', walletArray);
+  router.post('/', async (req, res) => {
+    try {
+      const wallets = _.get(req, ['body', 'wallets']);
+      console.log('zzz subscribe wallets: ', wallets);
+      const walletArray = wallets.split(',');
+      logger.info('Subscribe to wallets: ', walletArray);
 
-  //     NOTIFICATION_WALLETS = _
-  //       .chain(NOTIFICATION_WALLETS)
-  //       .concat(walletArray)
-  //       .flatten()
-  //       .compact()
-  //       .uniq()
-  //       .value();
+      NOTIFICATION_WALLETS = _
+        .chain(NOTIFICATION_WALLETS)
+        .concat(walletArray)
+        .flatten()
+        .compact()
+        .uniq()
+        .value();
 
-  //     logger.info('Updated NOTIFICATION_WALLETS: ', NOTIFICATION_WALLETS);
+      logger.info('Updated NOTIFICATION_WALLETS: ', NOTIFICATION_WALLETS);
 
-  //     return res.status(200).json({
-  //       status: 1,
-  //       NOTIFICATION_WALLETS,
-  //     });
-  //   } catch (e) {
-  //     console.error(e);
-  //     return res.status(500).json({ error: 'An error occurred while subscribing to wallets.' });
-  //   }
-  // });
+      return res.status(200).json({
+        status: 1,
+        NOTIFICATION_WALLETS,
+      });
+    } catch (e) {
+      console.error(e);
+      return res.status(500).json({ error: 'An error occurred while subscribing to wallets.' });
+    }
+  });
 
   router.delete('/', async (req, res) => {
     try {
