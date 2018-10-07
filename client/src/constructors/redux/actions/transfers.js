@@ -12,7 +12,7 @@ export const getTransfersForAddress = async (address, addressType) => {
       })
       const { data } = await axios.get(`/api/v1/transfers?wallets=${address}`)
       const { coins, tokens } = data;
-      log.info('Server returned address transfers: ', coins, tokens)
+      // log.info('Server returned address transfers: ', coins, tokens)
       dispatch({
         type: 'TRANSFERS_LOADING',
         payload: false,

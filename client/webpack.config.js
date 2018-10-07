@@ -1,4 +1,6 @@
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const ServiceWorkerWebpackPlugin = require('serviceworker-webpack-plugin');
+
 const webpack = require('webpack');
 const path = require('path');
 
@@ -52,6 +54,9 @@ const config = {
   plugins: [
     new HtmlWebpackPlugin({ template: path.resolve(__dirname, './src/index.html'), inject: true }),
     new webpack.HotModuleReplacementPlugin(),
+    new ServiceWorkerWebpackPlugin({
+      entry: path.resolve(__dirname, './src/constructors/sw/sw.js'),
+    }),
   ],
   resolve: {
     extensions: ['.js', '.jsx'],

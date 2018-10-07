@@ -3,13 +3,25 @@ const logger = require('@/constructors/logger');
 const axios = require('axios');
 const url = require('url');
 const _ = require('lodash');
-
+const webpush = require('web-push');
+const SUBSCRIPTIONS = [];
 const {
   getCoinData,
   getTokenData,
   getTransferUrl,
   isCoinTx,
 } = require('@/utils/etherscan');
+
+const sendNotification = (subscription, dataToSend) => {
+  return webpush.sendNotification(subscription, dataToSend)
+  .catch((err) => {
+    if (err.statusCode === 410) {
+      return deleteSubscriptionFromDatabase(subscription._id)
+    } else {
+      console.log('Subscription is no longer valid: ', err)
+    }
+  })
+}
 
 const getTxs = async(address) => {
   if (!address) return null;
@@ -77,6 +89,13 @@ module.exports = () => {
       return res.status(500).json({ error: 'An error occurred while fetching coins.' });
     }
   });
+
+  router.post('/subscribe', async (req, res) => {
+    const { subscription } = req.body
+    if (!subscription) return res.status(500).json({ error: 'Subscription must be provided.' });
+    SUBSCRIPTIONS.push(subscription)
+    sendNotification(subscription, {hello: 'world'})
+  })
 
   return router;
 };

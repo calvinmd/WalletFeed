@@ -24,6 +24,7 @@ import '@/style.sass'
 import createReduxStore from '@/constructors/redux/store'
 import loglevel from '@/constructors/loglevel'
 import history from '@/constructors/history'
+import sw from '@/constructors/sw'
 
 import CoinFeedPage from '@/pages/CoinFeedPage'
 import TokenFeedPage from '@/pages/TokenFeedPage'
@@ -48,7 +49,9 @@ loglevel()
 // );
 
 const store = createReduxStore();
-
+Notification.requestPermission(function(status) {
+    console.log('Notification permission status:', status);
+});
 
 class App extends React.Component {
   constructor(props) {
