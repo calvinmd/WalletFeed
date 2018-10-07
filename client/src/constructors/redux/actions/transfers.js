@@ -3,31 +3,23 @@ import axios from '@/constructors/axios'
 import { getItem, setItem } from '@/constructors/localStorage'
 
 
-const getTransfersForAddress = async (address) => {
-  // let coins
-  // let tokens
-  try {
-    // coins = getItem('coins')
-    // tokens = getItem('tokens')
-    // if (coins && tokens) return { data: { coins, tokens } }
-
-    // const res = {
-
-    // }
-
-
-    const res = await axios.get(`/api/v1/transfers/?address=${address}`)
-    // const { coins, tokens } = res;
-
-    // setItem('coins', { coins })
-    // setItem('tokens', { tokens })
-    return res
-    // return { data: { coins, tokens } }
-  } catch (e) {
-    log.error(e)
+export const getTransfersForAddress = async (address, addressType) => {
+  return async dispatch => {
+    try {
+      const { data } = await axios.get(`/api/v1/transfers/?address=${address}`)
+      const { coins, tokens } = data;
+      log.info('Server returned address transfers: ', coins, tokens)
+      return dispatch({
+        type: 'UPDATE_TRANSFERS',
+        payload: {
+          addressType,
+          data: { coins, tokens },
+        },
+      })
+    } catch (error) {
+      log.error(error)
+      // return dispatch({ type: 'UPDATE_TRANSFERS', payload: { error } })
+      return null;
+    }
   }
-}
-
-export {
-  getTransfersForAddress,
 }

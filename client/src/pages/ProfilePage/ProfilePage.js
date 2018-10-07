@@ -18,7 +18,7 @@ import './ProfilePage.sass'
 @withRouter
 class ProfilePage extends Component {
   dom = {
-    walletsInput: null,
+    walletInput: null,
     watchlist: null,
   }
 
@@ -30,10 +30,10 @@ class ProfilePage extends Component {
       <div className="ProfilePage">
         <h1 style={{ padding: '15px', marginBottom: '5px' }}>My Profile</h1>
         <Card>
-          <Input type="text" label="Wallet" ref={c => (this.dom.wallets = c)} defaultValue={getItem('wallets')} />
+          <Input type="text" label="Wallet" ref={c => (this.dom.wallet = c)} defaultValue={getItem('wallet')} />
           <Input type="text" label="Watchlist" ref={c => (this.dom.watchlist = c)} defaultValue={getItem('watchlist')} />
           <Button onClick={() => {
-            setItem('wallets', this.dom.wallets.getValue())
+            setItem('wallet', this.dom.wallet.getValue())
             setItem('watchlist', this.dom.watchlist.getValue())
           }}>Update</Button>
         </Card>
