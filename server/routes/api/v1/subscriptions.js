@@ -11,7 +11,7 @@ const EMPTY_QUEUE = {
 };
 // TODO: Move these to DB
 let NOTIFICATION_WALLETS = [];
-let NOTIFICATION_QUEUE = EMPTY_QUEUE;
+let NOTIFICATION_QUEUE = _.cloneDeep(EMPTY_QUEUE);
 
 const INTERVAL = 2 * 60 * 1000;
 let LAST_TIMESTAMP = Date.now() - INTERVAL;
@@ -25,14 +25,14 @@ const listener = async() => {
     /* Add all transactions happened after INTERVAL ago to notification queue */
     coins.map(coin => {
       if (coin.timeStamp > LAST_TIMESTAMP) {
-        logger.info(`Adding coin transfer to notification queue: ${coin}`);
+        console.log('Adding coin transfer to notification queue: ', coin);
         NOTIFICATION_QUEUE.coins.push(coin);
       }
     });
 
     tokens.map(token => {
       if (token.timeStamp > LAST_TIMESTAMP) {
-        logger.info(`Adding token transfer to notification queue: ${token}`);
+        console.log('Adding token transfer to notification queue: ', token);
         NOTIFICATION_QUEUE.tokens.push(token);
       }
     });
@@ -61,8 +61,8 @@ module.exports = () => {
   router.get('/', async (req, res) => {
     try {
       const queue = _.cloneDeep(NOTIFICATION_QUEUE);
-      NOTIFICATION_QUEUE = EMPTY_QUEUE; // reset queue
-      return res.status(200).json({ queue });
+      NOTIFICATION_QUEUE = _.cloneDeep(EMPTY_QUEUE); // reset queue
+      return res.status(200).json(queue);
     } catch (e) {
       console.error(e);
       return res.status(500).json({ error: 'An error occurred while retrieving notification queue.' });
