@@ -12,6 +12,7 @@ const {
 } = require('@/utils/etherscan');
 
 const getTxs = async(address) => {
+  // logger.info('getTxs address: ', address);
   if (!address) return null;
 
   const etherscanUrl = getTransferUrl({ address });
@@ -22,8 +23,8 @@ const getTxs = async(address) => {
   const status = _.get(data, 'status');
   const result = _.get(data, 'result', 'api returns error.');
 
-  logger.info('Etherscan status: ', status);
-  logger.info('Etherscan result raw: ', result);
+  logger.info('zzz Etherscan status: ', status);
+  // logger.info('zzz Etherscan result raw: ', result);
   if (status !== '1') return null;
 
   return result;
@@ -38,6 +39,7 @@ module.exports = () => {
     try {
       const wallets = query.wallets;
       const walletArray = wallets.split(',');
+      logger.info('WalletArray: ', walletArray);
       const results = await Promise.all(walletArray.map(addr => getTxs(addr)));
       const result = _.flatten(_.compact(results));
 
